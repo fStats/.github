@@ -6,7 +6,7 @@ mindmap
     Backend
       OpenAPI Documentation
       Better API routes
-      (Support for client-side mods)
+      Support for client side mods
     Frontend
       Minimal site
       OG Images
