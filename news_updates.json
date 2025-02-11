@@ -1,0 +1,14 @@
+[
+  {
+    "date": 1739312044,
+    "text": "Setup news page to keep information up-to-date"
+  },
+  {
+    "date": 1739052801,
+    "text": "User, Projects and Favorites databases are recovered"
+  },
+  {
+    "date": 1738465200,
+    "text": "Let's start from the main. Since autumn 2024 fStats was shutdown caused Database issues. After some time I found DevOps that teach me and also help with improving the whole ecosystem, but cause of the time management issue it took longer than expected and plans about the comeback 2025 little bit duckup. 2 days ago we rechecked the plan again and agreed with the faster plan of the main issue (databases) and will make it possible to easily upload a new fix without any interruption. Work starts tomorrow and I hope to end it in a week but I can't promise anything cause DevOps is not my specialty. As soon as the project runs stable again I knows things that I will implement as soon as possible"
+  }
+]
