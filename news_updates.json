@@ -1,5 +1,9 @@
 [
   {
+    "date": 1741979743
+    "text": "Improved Image generator by replace some components with Rust and added Dragonfly (Redis) request caching (30 minutes)"
+  },
+  {
     "date": 1739312044,
     "text": "Setup news page to keep information up-to-date"
   },
