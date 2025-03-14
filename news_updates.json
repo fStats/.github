@@ -1,6 +1,6 @@
 [
   {
-    "date": 1741979743
+    "date": 1741979743,
     "text": "Improved Image generator by replace some components with Rust and added Dragonfly (Redis) request caching (30 minutes)"
   },
   {
