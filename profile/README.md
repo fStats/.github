@@ -47,7 +47,7 @@
 
 ## About The Project
 
-![Project Page Preview](https://cdn.modrinth.com/data/DkOr2M32/images/95a352019440c7011ef8183fe6307a587c28dc62.png)
+![Project Page Preview](https://cdn.modrinth.com/data/DkOr2M32/images/70d32b52147ef1d0431ffc31bb2241a743eaeb91.png)
 
 fStats is a 3rd-party metric collection library. The Main idea of is help developers to recognize their actual community based
 on charts
