@@ -39,8 +39,14 @@
             <li><a href="#for-developers">For developers</a></li>
         </ul>
     </li>
+    <li><a href="#structure">Structure</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li>
+      <a href="#contributing">Contributing</a>
+      <ul>
+        <li><a href="#localization">Localization</a></li>
+      </ul>
+    </li>
     <li><a href="#license">License</a></li>
   </ol>
 </details>
@@ -58,9 +64,29 @@ on charts
 
 ### For user
 
-Mod have config that allows to turn off a metric collection from server and hiding location
+Mod have config that allows to turn off a metric collection and hiding location
 
 > ../config/fstats-api/config.json
+<details>
+<summary>v2</summary>
+
+```json5
+{
+  "version": 2,  // Config version
+  "mode": "ALL", // Data collecting mode [ ALL | WITHOUT_LOCATION | NOTHING ]
+  "messages": {
+    "infos": true,
+    "warnings": true,
+    "errors": true
+  }
+}
+```
+
+</details>
+
+<details>
+<summary>v1</summary>
+
 ```json5
 {
     "enabled": true,      // Enable/Disable collection from our server
@@ -68,109 +94,91 @@ Mod have config that allows to turn off a metric collection from server and hidi
 }
 ```
 
+</details>
+
 ### For developers
 
-The first thing that you need to do is [register](https://fstats.dev/register) and create a project for get
-projectId
-
-After that, you are ready for adding a library as/to dependency
-<details>
-    <summary>Java - build.gradle</summary>
-
-```groovy
-repositories {
-    maven {
-        url "https://api.modrinth.com/maven"
-    }
-}
-
-dependencies {
-    // Option 1: Include fStats API to project for it to be available within your own jar (IT'S ONLY ~9KB!)
-    include(modImplementation("maven.modrinth:fstats:<version>")
-
-    // Option 2: Depend on fStats API, but require that users install it manually
-    modImplementation "maven.modrinth:fstats:<version>"
-}
-```
-
-</details>
-
-<details>
-    <summary>Kotlin - build.gradle.kts</summary>
-
-```kts
-repositories {
-    maven("https://api.modrinth.com/maven")
-}
-
-dependencies {
-    // Option 1: Include fStats API to project for it available within your own jar IT'S ONLY ~9KB!
-    include(modImplementation("maven.modrinth", "fstats", "<version>"))
-
-    // Option 2: Depend on fStats API, but require that users install it manually
-    modImplementation("maven.modrinth", "fstats", "<version>")
-}
-```
-
-</details>
-
-> fabric.mod.json
-
-```json
-"suggests": {
-    "fstats-api": "*"
-}
-```
-
-Setup project
-
-> fabric.mod.json
-
-```json
-"custom": {
-    "fstats": <projectId>
-}
-```
-
-Done, now when any server uses your mod and if they don't disable fStats, you are going to get data about that on [website](https://fstats.dev)
+Up-to-date guide can be found here: https://fstats.dev/getting-started
 
 Also, recommend adding the badge to your project description to notify users that you collect information. 
 
 *Resize the badge to any size that you want*
 ![Badge](https://cdn.modrinth.com/data/DkOr2M32/images/597e8bc81f48ad606ae5624f566994dde65ac409.png)
 
-Service also has [chart image generation](https://img.fstats.dev/) for webpages or markdown including
+fStats also has [Image Generator](https://img.fstats.dev/) for webpages or markdown including and [UI editor](https://fstats.github.io/fstats-image-generator-editor/) for it
 
-**Example URL: https://img.fstats.dev/timeline/1?format=svg&mode=week&theme=light**
-![fStats Chart](https://img.fstats.dev/timeline/1?format=svg&mode=week&theme=light)
+![fStats Chart](https://img.fstats.dev/v2/timeline/1?theme=light&format=svg&mode=week&width=800&height=300&client_color=alizarin&server_color=peter-river)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Roadmap
+## Structure
 
 ```mermaid
-mindmap
-  root((Roadmap))
-    Backend
-      OpenAPI Documentation
-      Better API routes
-      Support for client side mods
-    Frontend
-      Minimal site
-      OG Images
-      Charts SVG for Markdown
-    Mobile
-      Charts Viewing
-      Registration
-      Project creation
-      Favorite projects
-    API
-      Client Side Module
-      Server Side Module
+%%{
+  init: {
+    'theme': 'dark',
+    'themeVariables': {
+      'primaryColor': '#20242d',
+      'primaryTextColor': '#ffffff',
+      'primaryBorderColor': '#58a6ff',
+      'lineColor': '#7d8590',
+      'secondaryColor': '#20242d',
+      'tertiaryColor': '#20242d'
+    }
+  }
+}%%
+graph TD
+    subgraph " "
+        direction LR
+        subgraph "User Related"
+            Frontend("Frontend")
+            Minecraft("Minecraft Client")
+        end
+
+        subgraph "Core Infrastructure"
+            Backend("Backend")
+        end
+
+        subgraph "Data & Caching"
+            direction TB
+            Kafka("Kafka")
+            ClickHouse("ClickHouse")
+            PostgreSQL("PostgreSQL")
+            Dragonfly("Dragonfly (Redis cache)")
+            ImageGenerator("Image Generator")
+        end
+    end
+
+
+    %% Connections
+    Frontend -- "REST API" <--> Backend;
+    Minecraft -- "Metric POST" --> Backend;
+
+    Backend -- "Metric POST" --> Kafka;
+    Backend -- "Primary Database" <--> PostgreSQL;
+    Backend -- "Metric REST" --> ClickHouse;
+
+    Kafka -- "Kafka Engine" --> ClickHouse;
+
+    Backend -- "REST" --> ImageGenerator;
+    ImageGenerator -- "Cache" <--> Dragonfly;
+
+    %% Styling
+    style Frontend fill:#161b22,stroke:#30363d,stroke-width:2px;
+    style Minecraft fill:#161b22,stroke:#30363d,stroke-width:2px;
+    style Backend fill:#161b22,stroke:#58a6ff,stroke-width:2px;
+
+    classDef data fill:#161b22,stroke:#30363d,stroke-width:2px;
+    class Kafka,ClickHouse,PostgreSQL,Dragonfly,ImageGenerator data;
 ```
 
 See the [open issues](https://github.com/fstats/fstats-api/issues) for a full list of proposed features (and known
 issues).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Roadmap
+You can find the roadmap and related here: https://github.com/orgs/fStats/projects/1
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -184,10 +192,21 @@ simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
 
 1. Fork the Project
-   2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-   3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-   4. Push to the Branch (`git push origin feature/AmazingFeature`)
-   5. Open a Pull Request
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Localization
+fStats has many modules and all of them have different ways to localize, so check the table below to find the right guide.
+
+|Module|Guide|
+|--|--|
+|Frontend|[Link](https://github.com/fStats/fstats-frontend?tab=readme-ov-file#localization)|
+|Backend|Unsupported|
+|Image Generator|Unsupported|
+|Image Generator Editor|[Link](https://github.com/fStats/fstats-image-generator-editor?tab=readme-ov-file#localization)|
+|Minecraft API|[Link](https://github.com/fStats/fstats-api?tab=readme-ov-file#localization)|
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
