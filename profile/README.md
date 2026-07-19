@@ -1,7 +1,7 @@
 
 <div align="center">
   
-<h1><a href="">「 Use FastStats instead 」</a></h1>
+<h1>「 Use <a href="https://faststats.dev/mods">FastStats</a> instead 」</h1>
 
 </div>
 
