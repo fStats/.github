@@ -1,3 +1,10 @@
+
+<div align="center">
+  
+<h1>「 Use <a href="">FastStats</a> instead 」</h1>
+
+</div>
+
 <a name="readme-top"></a>
 
 [![Contributors][contributors-shield]][contributors-url]
